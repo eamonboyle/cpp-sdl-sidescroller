@@ -1,4 +1,7 @@
-﻿  Game.cpp
+﻿  Actor.cpp
+  Component.cpp
+  Game.cpp
   Main.cpp
+  Math.cpp
   Generating Code...
   SideScroller.vcxproj -> F:\Coding\CPP\SideScroller\Debug\SideScroller.exe
