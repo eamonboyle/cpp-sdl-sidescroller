@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL.h>
 
+#include <string>
 #include <vector>
 
 #undef main
@@ -16,10 +17,13 @@ public:
 	void AddActor(class Actor* actor);
 	void RemoveActor(class Actor* actor);
 
+	SDL_Texture* GetTexture(const std::string& fileName);
+
 private:
 	void ProcessInput();
 	void UpdateGame();
 	void GenerateOutput();
+	void LoadData();
 	void UnloadData();
 
 	std::vector<class Actor*> mActors;

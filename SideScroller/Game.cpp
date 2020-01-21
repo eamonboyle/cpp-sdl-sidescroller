@@ -1,5 +1,7 @@
 #include "Game.h"
 #include "Actor.h"
+#include "SDL_image.h"
+#include <algorithm>
 
 Game::Game()
 	:mWindow(nullptr)
@@ -49,6 +51,14 @@ bool Game::Initialize()
 		SDL_Log("Failed to create renderer: %s", SDL_GetError());
 		return false;
 	}
+
+	if (IMG_Init(IMG_INIT_PNG) == 0)
+	{
+		SDL_Log("Unable to initialize SDL_Image: %s", SDL_GetError());
+		return false;
+	}
+
+	LoadData();
 
 	return true;
 }
@@ -105,6 +115,11 @@ void Game::RemoveActor(Actor* actor)
 		std::iter_swap(iter, mActors.end() - 1);
 		mActors.pop_back();
 	}
+}
+
+SDL_Texture* Game::GetTexture(const std::string& fileName)
+{
+	return nullptr;
 }
 
 void Game::ProcessInput()
@@ -202,11 +217,18 @@ void Game::GenerateOutput()
 	SDL_RenderPresent(mRenderer);
 }
 
+void Game::LoadData()
+{
+}
+
 void Game::UnloadData()
 {
 	// delete actors
-	while (!mActors.back())
+	if (mActors.size() > 0)
 	{
-		delete mActors.back();
+		while (!mActors.back())
+		{
+			delete mActors.back();
+		}
 	}
 }
