@@ -1,8 +1,7 @@
 ﻿  Actor.cpp
+  AnimSpriteComponent.cpp
   Component.cpp
   Game.cpp
-F:\Coding\CPP\SideScroller\SideScroller\Game.cpp(214,35): error C2039: 'EDead': is not a member of 'Actor'
-F:\Coding\CPP\SideScroller\SideScroller\Actor.h(5): message : see declaration of 'Actor'
-F:\Coding\CPP\SideScroller\SideScroller\Game.cpp(214,40): error C2065: 'EDead': undeclared identifier
   SpriteComponent.cpp
   Generating Code...
+  SideScroller.vcxproj -> F:\Coding\CPP\SideScroller\Debug\SideScroller.exe
