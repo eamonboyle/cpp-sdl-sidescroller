@@ -1,10 +1,14 @@
 #include "Game.h"
+#include "Actor.h"
 
 Game::Game()
 	:mWindow(nullptr)
 	, mRenderer(nullptr)
 	, mTicksCount(0)
 	, mIsRunning(true)
+	, mActors()
+	, mPendingActors()
+	, mUpdatingActors(false)
 {
 }
 
@@ -61,9 +65,46 @@ void Game::RunLoop()
 
 void Game::Shutdown()
 {
+	UnloadData();
 	SDL_DestroyRenderer(mRenderer);
 	SDL_DestroyWindow(mWindow);
 	SDL_Quit();
+}
+
+void Game::AddActor(Actor* actor)
+{
+	// if updating actors, need to add to pending
+	if (mUpdatingActors)
+	{
+		mPendingActors.emplace_back(actor);
+	}
+	else
+	{
+		mActors.emplace_back(actor);
+	}
+}
+
+void Game::RemoveActor(Actor* actor)
+{
+	// is it in pending actors?
+	auto iter = std::find(mPendingActors.begin(), mPendingActors.end(), actor);
+
+	if (iter != mPendingActors.end())
+	{
+		// swap to end of vector and pop off
+		std::iter_swap(iter, mPendingActors.end() - 1);
+		mPendingActors.pop_back();
+	}
+
+	// is it in actors?
+	iter = std::find(mActors.begin(), mActors.end(), actor);
+
+	if (iter != mActors.end())
+	{
+		// swap to end and pop off
+		std::iter_swap(iter, mActors.end() - 1);
+		mActors.pop_back();
+	}
 }
 
 void Game::ProcessInput()
@@ -98,12 +139,48 @@ void Game::UpdateGame()
 	// delta time is the difference in ticks from last frame
 	// (converted to seconds)
 	float deltaTime = (SDL_GetTicks() - mTicksCount) / 1000.0f;
-	mTicksCount = SDL_GetTicks();
 
 	// clamp maximum delta time value
 	if (deltaTime > 0.0f)
 	{
 		deltaTime = 0.05f;
+	}
+
+	mTicksCount = SDL_GetTicks();
+
+	// update all actors
+	mUpdatingActors = true;
+	
+	for (auto actor : mActors)
+	{
+		actor->Update(deltaTime);
+	}
+
+	mUpdatingActors = false;
+
+	// move any pending actors to mActors
+	for (auto pending : mPendingActors)
+	{
+		mActors.emplace_back(pending);
+	}
+
+	mPendingActors.clear();
+
+	// add any dead actors to a temp vector
+	std::vector<Actor*> deadActors;
+
+	for (auto actor : mActors)
+	{
+		if (actor->GetState() == Actor::EDead)
+		{
+			deadActors.emplace_back(actor);
+		}
+	}
+
+	// delete dead actors
+	for (auto actor : deadActors)
+	{
+		delete actor;
 	}
 }
 
@@ -123,4 +200,13 @@ void Game::GenerateOutput()
 
 	// Swap front buffer and back buffer
 	SDL_RenderPresent(mRenderer);
+}
+
+void Game::UnloadData()
+{
+	// delete actors
+	while (!mActors.back())
+	{
+		delete mActors.back();
+	}
 }

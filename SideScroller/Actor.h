@@ -20,6 +20,8 @@ public:
 	void UpdateComponents(float deltaTime);
 	virtual void UpdateActor(float deltaTime);
 
+	State GetState() const { return mState; }
+
 	void AddComponent(class Component* component);
 	void RemoveComponent(class Component* component);
 
