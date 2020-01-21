@@ -2,6 +2,7 @@
 #include "Actor.h"
 #include "SDL_image.h"
 #include <algorithm>
+#include "SpriteComponent.h"
 
 Game::Game()
 	:mWindow(nullptr)
@@ -117,6 +118,30 @@ void Game::RemoveActor(Actor* actor)
 	}
 }
 
+void Game::AddSprite(SpriteComponent* sprite)
+{
+	// find the insertion point in the sorted vector
+	// (the first element with a higher draw order)
+	int myDrawOrder = sprite->GetDrawOrder();
+
+	auto iter = mSprites.begin();
+
+	for (; iter != mSprites.end(); ++iter)
+	{
+		if (myDrawOrder < (*iter)->GetDrawOrder())
+		{
+			break;
+		}
+	}
+
+	// insert element before position of iterator
+	mSprites.insert(iter, sprite);
+}
+
+void Game::RemoveSprite(SpriteComponent* sprite)
+{
+}
+
 SDL_Texture* Game::GetTexture(const std::string& fileName)
 {
 	return nullptr;
@@ -202,16 +227,19 @@ void Game::UpdateGame()
 void Game::GenerateOutput()
 {
 	// Set draw color to blue
-	SDL_SetRenderDrawColor(
-		mRenderer,
-		0,		// R
-		0,		// G 
-		255,	// B
-		255		// A
-	);
+	SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, 255);
 
 	// Clear back buffer
 	SDL_RenderClear(mRenderer);
+
+	// draw all sprite components
+	if (mSprites.size() > 0)
+	{
+		for (auto sprite : mSprites)
+		{
+			sprite->Draw(mRenderer);
+		}
+	}
 
 	// Swap front buffer and back buffer
 	SDL_RenderPresent(mRenderer);
