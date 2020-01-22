@@ -170,19 +170,6 @@
     <ClInclude Include="Ship.h" />
     <ClInclude Include="SpriteComponent.h" />
   </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\..\book-assets\gameprogcpp\Chapter02\Assets\Farback01.png" />
-    <Image Include="..\..\book-assets\gameprogcpp\Chapter02\Assets\Farback02.png" />
-    <Image Include="..\..\book-assets\gameprogcpp\Chapter02\Assets\Ship01.png" />
-    <Image Include="..\..\book-assets\gameprogcpp\Chapter02\Assets\Ship02.png" />
-    <Image Include="..\..\book-assets\gameprogcpp\Chapter02\Assets\Ship03.png" />
-    <Image Include="..\..\book-assets\gameprogcpp\Chapter02\Assets\Ship04.png" />
-    <Image Include="..\..\book-assets\gameprogcpp\Chapter02\Assets\Stars.png" />
-    <Image Include="C:\Users\blaow\Downloads\Asteroid.png" />
-    <Image Include="C:\Users\blaow\Downloads\Laser.png" />
-    <Image Include="C:\Users\blaow\Downloads\Ship.png" />
-    <Image Include="C:\Users\blaow\Downloads\ShipWithThrust.png" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\sdl2.redist.2.0.5\build\native\sdl2.redist.targets" Condition="Exists('..\packages\sdl2.redist.2.0.5\build\native\sdl2.redist.targets')" />

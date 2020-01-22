@@ -81,6 +81,7 @@ void Game::RunLoop()
 void Game::Shutdown()
 {
 	UnloadData();
+	IMG_Quit();
 	SDL_DestroyRenderer(mRenderer);
 	SDL_DestroyWindow(mWindow);
 	SDL_Quit();
@@ -144,11 +145,43 @@ void Game::AddSprite(SpriteComponent* sprite)
 
 void Game::RemoveSprite(SpriteComponent* sprite)
 {
+	auto iter = std::find(mSprites.begin(), mSprites.end(), sprite);
+	mSprites.erase(iter);
 }
 
 SDL_Texture* Game::GetTexture(const std::string& fileName)
 {
-	return nullptr;
+	SDL_Texture* tex = nullptr;
+	// is the texture already in the map?
+	auto iter = mTextures.find(fileName);
+
+	if (iter != mTextures.end())
+	{
+		tex = iter->second;
+	}
+	else
+	{
+		// load from file
+		SDL_Surface* surf = IMG_Load(fileName.c_str());
+
+		if (!surf)
+		{
+			SDL_Log("Failed to load texture file: %s", fileName.c_str());
+			return nullptr;
+		}
+
+		// create texture from surface
+		tex = SDL_CreateTextureFromSurface(mRenderer, surf);
+		SDL_FreeSurface(surf);
+
+		if (!tex)
+		{
+			SDL_Log("Failed to convert surface to texture for %s", fileName.c_str());
+			return nullptr;
+		}
+	}
+
+	return tex;
 }
 
 void Game::ProcessInput()
@@ -260,6 +293,28 @@ void Game::LoadData()
 	mShip->SetScale(1.5f);
 
 	// create actor for the background (this doesn't need a subclass)
+	Actor* temp = new Actor(this);
+	temp->SetPosition(Vector2(512.0f, 384.0f));
+
+	// create the far back background
+	BGSpriteComponent* bg = new BGSpriteComponent(temp);
+	bg->SetScreenSize(Vector2(1024.0f, 768.0f));
+	std::vector<SDL_Texture*> bgTexs = {
+		GetTexture("Asset/Farback01.png"),
+		GetTexture("Asset/Farback02.png")
+	};
+	bg->SetBGTextures(bgTexs);
+	bg->SetScrollSpeed(-100.0f);
+
+	// create the closer background
+	bg = new BGSpriteComponent(temp, 50);
+	bg->SetScreenSize(Vector2(1024.0f, 768.0f));
+	bgTexs = {
+		GetTexture("Assets/Stars.png"),
+		GetTexture("Assets/Stars.png")
+	};
+	bg->SetBGTextures(bgTexs);
+	bg->SetScrollSpeed(-200.0f);
 }
 
 void Game::UnloadData()
@@ -271,5 +326,16 @@ void Game::UnloadData()
 		{
 			delete mActors.back();
 		}
+	}
+
+	// destory textures
+	if (mTextures.size() > 0)
+	{
+		for (auto i : mTextures)
+		{
+			SDL_DestroyTexture(i.second);
+		}
+
+		mTextures.clear();
 	}
 }
