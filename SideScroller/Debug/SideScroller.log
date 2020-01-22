@@ -1,6 +1,7 @@
 ﻿  Actor.cpp
   AnimSpriteComponent.cpp
   BGSpriteComponent.cpp
+  CircleComponent.cpp
   Component.cpp
   Game.cpp
   MoveComponent.cpp
