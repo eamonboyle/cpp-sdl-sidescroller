@@ -23,7 +23,7 @@ public:
 	void SetForwardKey(int key) { mForwardKey = key; }
 	void SetBackKey(int key) { mBackKey = key; }
 	void SetClockwiseKey(int key) { mClockwiseKey = key; }
-	void SetCounterClockwiseKey(int key) { mCounterClockwiseKey = key };
+	void SetCounterClockwiseKey(int key) { mCounterClockwiseKey = key; }
 
 private:
 	// the max forward/angular speeds
