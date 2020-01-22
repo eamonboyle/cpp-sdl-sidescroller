@@ -47,6 +47,24 @@ void Actor::UpdateActor(float deltaTime)
 
 }
 
+void Actor::ProcessInput(const uint8_t* keyState)
+{
+	if (mState == EActive)
+	{
+		// first process input for components
+		for (auto comp : mComponents)
+		{
+			comp->ProcessInput(keyState);
+		}
+
+		ActorInput(keyState);
+	}
+}
+
+void Actor::ActorInput(const uint8_t* keyState)
+{
+}
+
 void Actor::AddComponent(Component* component)
 {
 	// find the insertion point in the sorted vector
