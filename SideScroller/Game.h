@@ -30,9 +30,13 @@ private:
 	void LoadData();
 	void UnloadData();
 
+	// map of textures loaded
+	std::unordered_map<std::string, SDL_Texture*> mTextures;
+
 	std::vector<class Actor*> mActors;
 	std::vector<class Actor*> mPendingActors;
 
+	// all the sprite components drawn
 	std::vector<class SpriteComponent*> mSprites;
 
 	SDL_Window* mWindow;
@@ -41,5 +45,8 @@ private:
 
 	bool mIsRunning;
 	bool mUpdatingActors;
+
+	// game specific
+	class Ship* mShip;
 };
 

@@ -1,2 +1,6 @@
-﻿  BGSpriteComponent.cpp
+﻿  Game.cpp
+  Main.cpp
+  Ship.cpp
+  SpriteComponent.cpp
+  Generating Code...
   SideScroller.vcxproj -> F:\Coding\CPP\SideScroller\Debug\SideScroller.exe

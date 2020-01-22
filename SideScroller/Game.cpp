@@ -1,8 +1,10 @@
 #include "Game.h"
-#include "Actor.h"
 #include "SDL_image.h"
 #include <algorithm>
+#include "Actor.h"
 #include "SpriteComponent.h"
+#include "Ship.h"
+#include "BGSpriteComponent.h"
 
 Game::Game()
 	:mWindow(nullptr)
@@ -60,6 +62,8 @@ bool Game::Initialize()
 	}
 
 	LoadData();
+
+	mTicksCount = SDL_GetTicks();
 
 	return true;
 }
@@ -168,6 +172,9 @@ void Game::ProcessInput()
 	{
 		mIsRunning = false;
 	}
+
+	// process ship input
+	mShip->ProcessKeyboard(state);
 }
 
 void Game::UpdateGame()
@@ -247,6 +254,10 @@ void Game::GenerateOutput()
 
 void Game::LoadData()
 {
+	// create the players ship
+	mShip = new Ship(this);
+	mShip->SetPosition(Vector2(100.0f, 384.0f));
+	mShip->SetScale(1.5f);
 }
 
 void Game::UnloadData()
