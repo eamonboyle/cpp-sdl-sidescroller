@@ -32,5 +32,5 @@
 *.app
 
 /.vs
-Debug/
+Debug
 SideScroller/Debug
