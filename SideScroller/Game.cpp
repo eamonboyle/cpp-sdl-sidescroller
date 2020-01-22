@@ -258,6 +258,8 @@ void Game::LoadData()
 	mShip = new Ship(this);
 	mShip->SetPosition(Vector2(100.0f, 384.0f));
 	mShip->SetScale(1.5f);
+
+	// create actor for the background (this doesn't need a subclass)
 }
 
 void Game::UnloadData()
