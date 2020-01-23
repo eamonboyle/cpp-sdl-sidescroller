@@ -4,6 +4,7 @@
 #include "Actor.h"
 #include "SpriteComponent.h"
 #include "Ship.h"
+#include "Asteroid.h"
 #include "BGSpriteComponent.h"
 
 Game::Game()
@@ -184,6 +185,21 @@ SDL_Texture* Game::GetTexture(const std::string& fileName)
 	return tex;
 }
 
+void Game::AddAsteroid(Asteroid* ast)
+{
+	mAsteroids.emplace_back(ast);
+}
+
+void Game::RemoveAsteroid(Asteroid* ast)
+{
+	auto iter = std::find(mAsteroids.begin(), mAsteroids.end(), ast);
+
+	if (iter != mAsteroids.end())
+	{
+		mAsteroids.erase(iter);
+	}
+}
+
 void Game::ProcessInput()
 {
 	SDL_Event event;
@@ -199,15 +215,22 @@ void Game::ProcessInput()
 		}
 	}
 
-	const Uint8* state = SDL_GetKeyboardState(NULL);
+	const Uint8* keyState = SDL_GetKeyboardState(NULL);
 
-	if (state[SDL_SCANCODE_ESCAPE])
+	if (keyState[SDL_SCANCODE_ESCAPE])
 	{
 		mIsRunning = false;
 	}
 
-	// process ship input
-	mShip->ProcessKeyboard(state);
+	// process actors input
+	mUpdatingActors = true;
+
+	for (auto actor : mActors)
+	{
+		actor->ProcessInput(keyState);
+	}
+	
+	mUpdatingActors = false;
 }
 
 void Game::UpdateGame()
@@ -315,6 +338,14 @@ void Game::LoadData()
 	};
 	bg->SetBGTextures(bgTexs);
 	bg->SetScrollSpeed(-200.0f);
+
+	// create asteroids
+	const int numAsteroids = 20;
+
+	for (int i = 0; i < numAsteroids; i++)
+	{
+		new Asteroid(this);
+	}
 }
 
 void Game::UnloadData()
