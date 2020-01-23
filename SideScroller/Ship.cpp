@@ -26,7 +26,7 @@ Ship::Ship(Game* game)
 	ic->SetClockwiseKey(SDL_SCANCODE_A);
 	ic->SetCounterClockwiseKey(SDL_SCANCODE_D);
 	ic->SetMaxForwardSpeed(300.0f);
-	ic->SetMaxAngularSpeed(Math::TwoPi);
+	ic->SetMaxAngularSpeed(Math::TwoPi / 3);
 }
 
 void Ship::UpdateActor(float deltaTime)
